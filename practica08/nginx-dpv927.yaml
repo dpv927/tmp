@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2024-11-13T18:45:08Z"
+  generation: 1
+  labels:
+    app: nginx-dpv927
+  name: nginx-dpv927
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-dpv927
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: nginx-dpv927
+    spec:
+      containers:
+      - image: europe-west1-docker.pkg.dev/dpv927-arso/biblioteca/nginx-dpv927@sha256:fd9b58bb93466f1bd0f568f8c878ada5e91b01bfdc56887913d60c5104bf69c2
+        imagePullPolicy: Always
+        name: nginx-dpv927-sha256-1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+          - mountPath: "/var/www/html"
+            name: www
+      volumes:
+        - name: www
+          persistentVolumeClaim: 
+            claimName: nginx-disk
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
